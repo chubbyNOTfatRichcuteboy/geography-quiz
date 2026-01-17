@@ -37,6 +37,17 @@
   padding: 2em;
 }
 
-.read-the-docs {
-  color: #888;
+body {
+  background-color:#1a1a1a;
+}
+
+#flag {
+  margin-bottom:10px;
+  border: 1px solid white;
+}
+
+#options {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }

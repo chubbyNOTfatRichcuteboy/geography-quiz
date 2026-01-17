@@ -39,8 +39,8 @@ app.get('/api/countries', async(req, res) => {
         const data = await response.json();
         console.log("3. data received from api");
         countryAndFlag = data.map(countryinfo => ({
-            country: countryinfo.name,
-            flag: countryinfo.flags
+            name: countryinfo.name,
+            imagelink: countryinfo.flags
         }));
 
         await Country.deleteMany({});
