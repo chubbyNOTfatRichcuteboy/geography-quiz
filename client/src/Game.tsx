@@ -14,6 +14,8 @@ export default function Game() {
   const [inputUsername, setInputUsername] = useState("");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderData, setLeaderData] = useState([]);
+  const [countryPool, setCountryPool] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +26,7 @@ export default function Game() {
         console.log(data);
       } catch (error) {
         console.error("Oh no, fetch failed: ", error);
+        setError(error);
       }
     };
     fetchData();
@@ -34,6 +37,10 @@ export default function Game() {
       handleNextOptions();
     }
   }, [allCountries]);
+  // here
+
+  if (error) return <div>Error loading game. Please refresh!</div>;
+  if (allCountries.length === 0) return <div>Loading Flags...</div>;
 
   if (allCountries.length === 0 || !currentOptions.length) {
     return <div>Loading flags...</div>;
@@ -55,12 +62,30 @@ export default function Game() {
     setPickedAnswer(selectedName);
   }
 
-  function handleNextOptions() {
+  function handleFirstOptions() {
     const correctCountry =
       allCountries[getRandomRange(0, allCountries.length - 1)];
     const otherCountries = allCountries.filter(
       (country) => country.name !== correctCountry.name,
     );
+    setCountryPool(otherCountries);
+    shuffleArray(otherCountries);
+    const options = otherCountries.slice(0, 3);
+
+    options.push(correctCountry);
+    shuffleArray(options);
+
+    setCurrentCorrect(correctCountry);
+    setCurrentOptions(options);
+  }
+
+  function handleNextOptions() {
+    const correctCountry =
+      countryPool[getRandomRange(0, countryPool.length - 1)];
+    const otherCountries = countryPool.filter(
+      (country) => country.name !== correctCountry.name,
+    );
+    setCountryPool(otherCountries);
 
     shuffleArray(otherCountries);
     const options = otherCountries.slice(0, 3);
@@ -92,12 +117,13 @@ export default function Game() {
     setPickedAnswer("");
     setIsSaved(false);
     setShowLeaderboard(false);
+    setInputUsername("");
   }
 
   function handlePlay() {
     resetGame();
     setGameState("playing");
-    handleNextOptions();
+    handleFirstOptions();
   }
 
   async function handleSave(e) {
@@ -110,7 +136,6 @@ export default function Game() {
     if (!response.ok) console.log("Posted score to db");
     await fetchLeaderboard();
     setIsSaved(true);
-    setInputUsername("");
   }
 
   async function fetchLeaderboard() {
@@ -174,6 +199,7 @@ export default function Game() {
           </button>
           <button
             onClick={() => {
+              if (!showLeaderboard) fetchLeaderboard();
               setShowLeaderboard(!showLeaderboard);
             }}
           >
@@ -181,7 +207,11 @@ export default function Game() {
           </button>
         </div>
         {showLeaderboard && (
-          <Leaderboard id="leaderboard" leaders={leaderData} />
+          <Leaderboard
+            id="leaderboard"
+            leaders={leaderData}
+            playerName={inputUsername}
+          />
         )}
       </div>
     );

@@ -61,6 +61,11 @@ body {
   gap:10px;
 }
 
+.highlight {
+  box-shadow: 0 0 5px white;
+  color:white;
+}
+
 #leaderboard-table {
   border-spacing:30px 5px;
 }

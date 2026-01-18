@@ -1,8 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
 const Country = require('./models/Country');
 const Score = require('./models/Score')
+const User = require('./models/User')
+
 require('dotenv').config();
 
 const MONGO_URI = process.env.MONGODB_URI;
@@ -42,10 +46,11 @@ app.get('/api/countries', async(req, res) => {
             name: countryinfo.name,
             imagelink: countryinfo.flags
         }));
-
-        await Country.deleteMany({});
-        await Country.insertMany(countryAndFlag);
-
+        try {
+            await Country.insertMany(countryAndFlag, { ordered: false });
+        } catch (dbError) {
+            console.log("DB ERROR, CONTINUING ANYWAY")
+        }
         res.status(201).json(countryAndFlag);
     } catch (error) {
         console.log("error fetching", error);
@@ -74,6 +79,26 @@ app.post('/add-score', async(req, res) => {
     } catch (error) {
         console.log("error adding", error);
         res.status(400).json({ message: error.message })
+    }
+});
+
+app.post('/api/auth/signup', async(req, res) => {
+    try {
+        const newUser = new User({
+            username: req.body.username,
+            password: req.body.password
+        });
+
+        const savedUser = await newUser.save();
+        const token = jwt.sign({ "id": savedUser._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        res.status(201).json(token, user: {id: savedUser._id, username: savedUser.username});
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "username already taken" })
+        }
+        console.log("Error with signup", error);
+        res.status(400).json({ message: error.message });
     }
 });
 

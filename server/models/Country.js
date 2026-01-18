@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const countrySchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     imagelink: { type: String, required: true},
 });
 
