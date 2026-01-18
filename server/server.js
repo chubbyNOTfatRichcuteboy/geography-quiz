@@ -55,7 +55,7 @@ app.get('/api/countries', async(req, res) => {
 
 app.get('/leaderboard', async(req, res) => {
     try {
-        const scores = await Score.find().sort({ points: -1 });
+        const scores = await Score.find().sort({ points: -1 }).limit(10);
         res.json(scores)
     } catch (error) {
         console.log("error fetching db", error)

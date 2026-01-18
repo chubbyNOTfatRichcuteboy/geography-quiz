@@ -41,6 +41,15 @@ body {
   background-color:#1a1a1a;
 }
 
+#top-bar {
+  margin-bottom:10px;
+  color:white;
+}
+
+#next-button {
+  margin-top:10px;
+}
+
 #flag {
   margin-bottom:10px;
   border: 1px solid white;
@@ -50,4 +59,31 @@ body {
   display:flex;
   flex-direction:column;
   gap:10px;
+}
+
+#leaderboard-table {
+  border-spacing:30px 5px;
+}
+
+#play-leaderboard-button-container {
+  display:flex;
+  gap:10px;
+}
+
+#results-container {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+button.correct-answer:disabled {
+  background-color: #2ecc71; /* Green */
+  color: white;
+  opacity: 1; /* Prevents the "faded" look */
+}
+
+button.incorrect-answer:disabled {
+  background-color: #e74c3c; /* Red */
+  color: white;
+  opacity: 1;
 }
