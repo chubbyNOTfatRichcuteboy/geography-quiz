@@ -27,7 +27,7 @@ connect();
 
 
 app.use(cors({
-    origin: 'https://deployed-geography-quiz.vercel.app/'
+    origin: 'https://geography-quiz-six.vercel.app/'
 }));
 app.use(express.json());
 
