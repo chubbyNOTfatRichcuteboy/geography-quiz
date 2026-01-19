@@ -11,7 +11,7 @@ require('dotenv').config();
 
 const MONGO_URI = process.env.MONGODB_URI;
 const app = express();
-const PORT = 5001;
+const PORT = process.env.PORT || 6969;
 const url = "https://geography.underscore.wtf/countries.json";
 
 

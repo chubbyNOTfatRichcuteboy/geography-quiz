@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function Profile() {
+export default function Profile({ refreshTrigger }) {
   const [scoresData, setScoresData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,7 +30,7 @@ export default function Profile() {
       }
     };
     fetchScores();
-  }, []);
+  }, [refreshTrigger]);
   if (isLoading) {
     return (
       <div>

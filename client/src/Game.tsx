@@ -260,7 +260,7 @@ export default function Game() {
             playerName={user.username}
           />
         )}
-        {viewingProfile && <Profile />}
+        {viewingProfile && <Profile refreshTrigger={isSaved} />}
       </div>
     );
   } else if (gameState === "welcome") {
@@ -280,7 +280,7 @@ export default function Game() {
         >
           Score history
         </button>
-        {viewingProfile && <Profile />}
+        {viewingProfile && <Profile refreshTrigger={isSaved} />}
       </div>
     );
   }
