@@ -41,7 +41,7 @@ export default function Game() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://geography-quiz-six.vercel.app/api/countries",
+          "https://geography-quiz-6wal.onrender.com/api/countries",
         );
         const data = await response.json();
         setAllCountries(data);
@@ -167,7 +167,7 @@ export default function Game() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const response = await fetch(
-      "https://geography-quiz-six.vercel.app/add-score",
+      "https://geography-quiz-6wal.onrender.com/add-score",
       {
         method: "POST",
         headers: {
@@ -184,7 +184,7 @@ export default function Game() {
 
   async function fetchLeaderboard() {
     const response = await fetch(
-      "https://geography-quiz-six.vercel.app/leaderboard",
+      "https://geography-quiz-6wal.onrender.com/leaderboard",
     );
     const leaders = await response.json();
     setLeaderData(leaders);
