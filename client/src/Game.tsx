@@ -276,11 +276,7 @@ export default function Game() {
           </button>
         </div>
         {showLeaderboard && (
-          <Leaderboard
-            id="leaderboard"
-            leaders={leaderData}
-            playerName={user!.username}
-          />
+          <Leaderboard leaders={leaderData} playerName={user!.username} />
         )}
         {viewingProfile && <Profile refreshTrigger={isSaved} />}
       </div>
