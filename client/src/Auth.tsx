@@ -16,8 +16,8 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const url = isLogin
-      ? "https://geography-quiz-6wal.onrender.com/api/auth/login"
-      : "https://geography-quiz-6wal.onrender.com/api/auth/signup";
+      ? "https://geography-quiz-six.vercel.app/api/auth/login"
+      : "https://geography-quiz-six.vercel.app/api/auth/signup";
     try {
       const response = await fetch(url, {
         method: "POST",

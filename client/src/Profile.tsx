@@ -19,7 +19,7 @@ export default function Profile({
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://geography-quiz-6wal.onrender.com/leaderboard/my-scores",
+          "https://geography-quiz-six.vercel.app/leaderboard/my-scores",
           {
             method: "GET",
             headers: {
