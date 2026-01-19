@@ -27,7 +27,7 @@ connect();
 
 
 app.use(cors({
-    origin: 'https://geography-quiz-six.vercel.app/'
+    origin: 'https://geography-quiz-six.vercel.app'
 }));
 app.use(express.json());
 
@@ -61,7 +61,7 @@ app.get('/api/countries', async(req, res) => {
         const response = await fetch(url);
         const data = await response.json();
         console.log("3. data received from api");
-        countryAndFlag = data.map(countryinfo => ({
+        const countryAndFlag = data.map(countryinfo => ({
             name: countryinfo.name,
             imagelink: countryinfo.flags
         }));
