@@ -92,3 +92,10 @@ button.incorrect-answer:disabled {
   color: white;
   opacity: 1;
 }
+
+#auth-container, #auth{
+  display: flex;
+  flex-direction: column;
+  color:white;
+  gap:5px;
+}

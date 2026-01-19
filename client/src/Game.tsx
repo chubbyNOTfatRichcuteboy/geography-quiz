@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Leaderboard from "./Leaderboard.tsx";
+import Auth from "./Auth.tsx";
+import Logout from "./Logout.tsx";
 
 export default function Game() {
   const [allCountries, setAllCountries] = useState([]);
@@ -11,11 +13,12 @@ export default function Game() {
   const [gameScore, setGameScore] = useState(0);
   const [pickedAnswer, setPickedAnswer] = useState("");
   const [isSaved, setIsSaved] = useState(false);
-  const [inputUsername, setInputUsername] = useState("");
+  // const [inputUsername, setInputUsername] = useState("");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderData, setLeaderData] = useState([]);
   const [countryPool, setCountryPool] = useState([]);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,13 +40,27 @@ export default function Game() {
       handleNextOptions();
     }
   }, [allCountries]);
-  // here
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      console.log("Found a token, logging user back in...");
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (savedUser) {
+        setUser(savedUser);
+      }
+    }
+  }, []);
 
   if (error) return <div>Error loading game. Please refresh!</div>;
   if (allCountries.length === 0) return <div>Loading Flags...</div>;
 
   if (allCountries.length === 0 || !currentOptions.length) {
     return <div>Loading flags...</div>;
+  }
+
+  if (!user) {
+    return <Auth onAuthSuccess={handleAuthSuccess} />;
   }
 
   function shuffleArray(inputArray: Array<object>) {
@@ -117,7 +134,7 @@ export default function Game() {
     setPickedAnswer("");
     setIsSaved(false);
     setShowLeaderboard(false);
-    setInputUsername("");
+    // setInputUsername("");
   }
 
   function handlePlay() {
@@ -128,10 +145,14 @@ export default function Game() {
 
   async function handleSave(e) {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     const response = await fetch("http://localhost:5001/add-score", {
       method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ username: inputUsername, points: gameScore }),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ points: gameScore }),
     });
     if (!response.ok) console.log("Posted score to db");
     await fetchLeaderboard();
@@ -142,6 +163,19 @@ export default function Game() {
     const response = await fetch("http://localhost:5001/leaderboard");
     const leaders = await response.json();
     setLeaderData(leaders);
+  }
+
+  function handleAuthSuccess(token, userData) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+    console.log("Logging in...");
+  }
+
+  function logout() {
+    const token = localStorage.getItem("token");
+    localStorage.removeItem(token);
+    setUser(null);
   }
 
   if (gameState === "playing") {
@@ -182,14 +216,14 @@ export default function Game() {
           <h2>Score Saved!</h2>
         ) : (
           <form onSubmit={handleSave}>
-            <input
+            {/* <input
               type="text"
               value={inputUsername}
               onChange={(e) => setInputUsername(e.target.value)}
               placeholder="Input a username"
               id="username-input"
               required
-            ></input>
+            ></input> */}
             <button id="save-score">Save Score</button>
           </form>
         )}
@@ -210,7 +244,7 @@ export default function Game() {
           <Leaderboard
             id="leaderboard"
             leaders={leaderData}
-            playerName={inputUsername}
+            playerName={user.username}
           />
         )}
       </div>
@@ -222,6 +256,7 @@ export default function Game() {
         <button id="play-button" onClick={handlePlay}>
           Play
         </button>
+        <Logout handleLogout={logout} />
       </div>
     );
   }
