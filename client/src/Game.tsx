@@ -25,7 +25,9 @@ export default function Game() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/countries");
+        const response = await fetch(
+          "https://geography-quiz-6wal.onrender.com/api/countries",
+        );
         const data = await response.json();
         setAllCountries(data);
         console.log(data);
@@ -149,21 +151,26 @@ export default function Game() {
   async function handleSave(e) {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const response = await fetch("http://localhost:5001/add-score", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      "https://geography-quiz-6wal.onrender.com/add-score",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ points: gameScore }),
       },
-      body: JSON.stringify({ points: gameScore }),
-    });
+    );
     if (!response.ok) console.log("Posted score to db");
     await fetchLeaderboard();
     setIsSaved(true);
   }
 
   async function fetchLeaderboard() {
-    const response = await fetch("http://localhost:5001/leaderboard");
+    const response = await fetch(
+      "https://geography-quiz-6wal.onrender.com/leaderboard",
+    );
     const leaders = await response.json();
     setLeaderData(leaders);
   }

@@ -8,8 +8,8 @@ export default function Auth({ onAuthSuccess }) {
   async function handleSubmit(e) {
     e.preventDefault();
     const url = isLogin
-      ? "http://localhost:5001/api/auth/login"
-      : "http://localhost:5001/api/auth/signup";
+      ? "https://geography-quiz-6wal.onrender.com/api/auth/login"
+      : "https://geography-quiz-6wal.onrender.com/api/auth/signup";
     try {
       const response = await fetch(url, {
         method: "POST",

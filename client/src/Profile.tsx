@@ -9,7 +9,7 @@ export default function Profile({ refreshTrigger }) {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "http://localhost:5001/leaderboard/my-scores",
+          "https://geography-quiz-6wal.onrender.com/leaderboard/my-scores",
           {
             method: "GET",
             headers: {

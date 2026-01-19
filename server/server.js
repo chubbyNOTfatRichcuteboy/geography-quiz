@@ -26,7 +26,9 @@ async function connect() {
 connect();
 
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://deployed-geography-quiz.vercel.app/'
+}));
 app.use(express.json());
 
 async function authenticateToken (req, res, next) {
