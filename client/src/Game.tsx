@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Leaderboard from "./Leaderboard.tsx";
 import Auth from "./Auth.tsx";
 import Logout from "./Logout.tsx";
+import Profile from "./Profile.tsx";
 
 export default function Game() {
   const [allCountries, setAllCountries] = useState([]);
@@ -19,6 +20,7 @@ export default function Game() {
   const [countryPool, setCountryPool] = useState([]);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [viewingProfile, setViewingProfile] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,6 +137,7 @@ export default function Game() {
     setIsSaved(false);
     setShowLeaderboard(false);
     // setInputUsername("");
+    setViewingProfile(false);
   }
 
   function handlePlay() {
@@ -235,9 +238,19 @@ export default function Game() {
             onClick={() => {
               if (!showLeaderboard) fetchLeaderboard();
               setShowLeaderboard(!showLeaderboard);
+              setViewingProfile(false);
             }}
           >
             Toggle Leaderboard
+          </button>
+          <button
+            id="show-scores"
+            onClick={() => {
+              setViewingProfile((prev) => !prev);
+              setShowLeaderboard(false);
+            }}
+          >
+            Score history
           </button>
         </div>
         {showLeaderboard && (
@@ -247,6 +260,7 @@ export default function Game() {
             playerName={user.username}
           />
         )}
+        {viewingProfile && <Profile />}
       </div>
     );
   } else if (gameState === "welcome") {
@@ -257,6 +271,16 @@ export default function Game() {
           Play
         </button>
         <Logout handleLogout={logout} />
+        <button
+          id="show-scores"
+          onClick={() => {
+            setViewingProfile((prev) => !prev);
+            setShowLeaderboard(false);
+          }}
+        >
+          Score history
+        </button>
+        {viewingProfile && <Profile />}
       </div>
     );
   }

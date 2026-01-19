@@ -23,9 +23,9 @@ export default function Leaderboard({ leaders, playerName }) {
                   leader.username === playerName ? "highlight" : "nohighlight"
                 }
               >
-                <th>{leader.username}</th>
-                <th>{leader.points}</th>
-                <th>{date}</th>
+                <td>{leader.username}</td>
+                <td>{leader.points}</td>
+                <td>{date}</td>
               </tr>
             );
           })}

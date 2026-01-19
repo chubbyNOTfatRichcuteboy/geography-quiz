@@ -141,6 +141,16 @@ app.post('/api/auth/login', async (req, res) => {
     }
 })
 
+app.get('/leaderboard/my-scores', authenticateToken, async(req, res) => {
+    try {
+        const username = req.user.username
+        const scores = await Score.find({ username }).sort({ createdAt: -1 }).lean();
+        res.status(200).json({scores: scores});
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong" })
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
