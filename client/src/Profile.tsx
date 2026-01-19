@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 
-export default function Profile({ refreshTrigger }) {
-  const [scoresData, setScoresData] = useState([]);
+interface Score {
+  _id: string;
+  points: number;
+  date: string;
+}
+
+export default function Profile({
+  refreshTrigger,
+}: {
+  refreshTrigger: boolean;
+}) {
+  const [scoresData, setScoresData] = useState<Score[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

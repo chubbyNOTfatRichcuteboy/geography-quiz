@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 
-export default function Auth({ onAuthSuccess }) {
+interface User {
+  username: string;
+}
+
+interface AuthProps {
+  onAuthSuccess: (token: string, user: User) => void;
+}
+
+export default function Auth({ onAuthSuccess }: AuthProps) {
   const [isLogin, setIsLogin] = useState(false);
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const url = isLogin
       ? "https://geography-quiz-6wal.onrender.com/api/auth/login"

@@ -4,22 +4,37 @@ import Auth from "./Auth.tsx";
 import Logout from "./Logout.tsx";
 import Profile from "./Profile.tsx";
 
+interface Country {
+  name: string;
+  imagelink: string;
+}
+
+interface User {
+  username: string;
+}
+
+interface Leader {
+  username: string;
+  points: number;
+  date: string;
+}
+
 export default function Game() {
-  const [allCountries, setAllCountries] = useState([]);
+  const [allCountries, setAllCountries] = useState<Country[]>([]);
   const [gameState, setGameState] = useState("welcome"); // needs states to see which phase, loading screen, playing, leaderboard, etc
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [currentCorrect, setCurrentCorrect] = useState({});
-  const [currentOptions, setCurrentOptions] = useState([]);
+  const [currentCorrect, setCurrentCorrect] = useState<Country | null>(null);
+  const [currentOptions, setCurrentOptions] = useState<Country[]>([]);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [gameScore, setGameScore] = useState(0);
   const [pickedAnswer, setPickedAnswer] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   // const [inputUsername, setInputUsername] = useState("");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [leaderData, setLeaderData] = useState([]);
-  const [countryPool, setCountryPool] = useState([]);
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
+  const [leaderData, setLeaderData] = useState<Leader[]>([]);
+  const [countryPool, setCountryPool] = useState<Country[]>([]);
+  const [error, setError] = useState<unknown>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [viewingProfile, setViewingProfile] = useState(false);
 
   useEffect(() => {
@@ -49,7 +64,7 @@ export default function Game() {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
       console.log("Found a token, logging user back in...");
-      const savedUser = JSON.parse(localStorage.getItem("user"));
+      const savedUser = JSON.parse(localStorage.getItem("user") || "null");
       if (savedUser) {
         setUser(savedUser);
       }
@@ -67,7 +82,7 @@ export default function Game() {
     return <Auth onAuthSuccess={handleAuthSuccess} />;
   }
 
-  function shuffleArray(inputArray: Array<object>) {
+  function shuffleArray(inputArray: any[]) {
     inputArray.sort(() => Math.random() - 0.5);
   }
 
@@ -76,7 +91,7 @@ export default function Game() {
   }
 
   function handleAnswerClick(selectedName: string) {
-    if (selectedName === currentCorrect.name) {
+    if (currentCorrect && selectedName === currentCorrect.name) {
       setGameScore((prev) => prev + 1);
     }
     setHasAnswered(true);
@@ -133,7 +148,7 @@ export default function Game() {
     setHasAnswered(false);
     setCurrentQuestion(1);
     setCurrentOptions([]);
-    setCurrentCorrect({});
+    setCurrentCorrect(null);
     setGameScore(0);
     setPickedAnswer("");
     setIsSaved(false);
@@ -148,7 +163,7 @@ export default function Game() {
     handleFirstOptions();
   }
 
-  async function handleSave(e) {
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const response = await fetch(
@@ -175,7 +190,7 @@ export default function Game() {
     setLeaderData(leaders);
   }
 
-  function handleAuthSuccess(token, userData) {
+  function handleAuthSuccess(token: string, userData: User) {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
@@ -183,8 +198,8 @@ export default function Game() {
   }
 
   function logout() {
-    const token = localStorage.getItem("token");
-    localStorage.removeItem(token);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   }
 
@@ -192,7 +207,7 @@ export default function Game() {
     return (
       <div id="background">
         <div id="top-bar">{currentQuestion}/10</div>
-        <img id="flag" src={currentCorrect.imagelink} />
+        <img id="flag" src={currentCorrect?.imagelink} />
         <div id="options">
           {currentOptions.map((country) => (
             <button
@@ -200,7 +215,7 @@ export default function Game() {
               onClick={() => handleAnswerClick(country.name)}
               disabled={hasAnswered}
               className={
-                country.name === currentCorrect.name && hasAnswered
+                country.name === currentCorrect?.name && hasAnswered
                   ? "correct-answer"
                   : country.name === pickedAnswer
                     ? "incorrect-answer"
@@ -264,7 +279,7 @@ export default function Game() {
           <Leaderboard
             id="leaderboard"
             leaders={leaderData}
-            playerName={user.username}
+            playerName={user!.username}
           />
         )}
         {viewingProfile && <Profile refreshTrigger={isSaved} />}

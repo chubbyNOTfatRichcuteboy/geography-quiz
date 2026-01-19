@@ -1,4 +1,15 @@
-export default function Leaderboard({ leaders, playerName }) {
+interface Leader {
+  username: string;
+  points: number;
+  date: string;
+}
+
+interface LeaderboardProps {
+  leaders: Leader[];
+  playerName: string;
+}
+
+export default function Leaderboard({ leaders, playerName }: LeaderboardProps) {
   return leaders.length > 0 ? (
     <div>
       <table id="leaderboard-table">
